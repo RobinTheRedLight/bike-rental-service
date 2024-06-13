@@ -10,8 +10,16 @@ const router = express.Router();
 router.post(
   '/',
   auth(USER_ROLE.admin),
-  validateRequest(BikeValidation.bikeValidationSchema),
+  validateRequest(BikeValidation.createBikeValidationSchema),
   BikeControllers.createBike,
+);
+router.get('/', BikeControllers.getAllBike);
+
+router.put(
+  '/:id',
+  auth(USER_ROLE.admin),
+  validateRequest(BikeValidation.updateBikeValidationSchema),
+  BikeControllers.updateBike,
 );
 
 export const BikeRoutes = router;
