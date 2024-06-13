@@ -40,8 +40,53 @@ const updateBikeIntoDB = async (id: string, payload: Partial<TBike>) => {
   return formattedResult;
 };
 
+const deleteBikeFromDB = async (id: string) => {
+  const session = await Bike.startSession();
+  session.startTransaction();
+
+  try {
+    const updateResult = await Bike.findByIdAndUpdate(
+      id,
+      { isAvailable: false },
+      { new: true, session },
+    );
+
+    if (!updateResult) {
+      throw new Error('Bike not found');
+    }
+
+    const deleteResult = await Bike.findByIdAndDelete(id, { session });
+
+    if (!deleteResult) {
+      throw new Error('Bike not found or already deleted');
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
+    const formattedResult = {
+      _id: updateResult._id,
+      name: updateResult.name,
+      description: updateResult.description,
+      pricePerHour: updateResult.pricePerHour,
+      isAvailable: updateResult.isAvailable,
+      cc: updateResult.cc,
+      year: updateResult.year,
+      model: updateResult.model,
+      brand: updateResult.brand,
+    };
+
+    return formattedResult;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
+};
+
 export const BikeServices = {
   createBikeIntoDB,
   getBikesFromDB,
   updateBikeIntoDB,
+  deleteBikeFromDB,
 };
