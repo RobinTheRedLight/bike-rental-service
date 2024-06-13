@@ -8,3 +8,7 @@ export const userValidationSchema = z.object({
   address: z.string().min(1, 'Address is required'),
   role: z.enum(['admin', 'user']),
 });
+
+export const UserValidation = {
+  userValidationSchema,
+};
