@@ -29,7 +29,19 @@ const updateBooking = catchAsync(async (req, res) => {
   });
 });
 
+const getBooking = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
+  const result = await BookingServices.getBookingIntoDB(token);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Rentals retrieved successfully',
+    data: result,
+  });
+});
+
 export const BookingControllers = {
   createBooking,
   updateBooking,
+  getBooking,
 };

@@ -74,22 +74,6 @@ const createBookingIntoDB = async (payload: any) => {
     throw error;
   }
 };
-// const getBikesFromDB = async () => {
-//   const result = await Bike.find();
-//   const formattedResult = result.map((bike) => ({
-//     _id: bike._id,
-//     name: bike.name,
-//     description: bike.description,
-//     pricePerHour: bike.pricePerHour,
-//     isAvailable: bike.isAvailable,
-//     cc: bike.cc,
-//     year: bike.year,
-//     model: bike.model,
-//     brand: bike.brand,
-//   }));
-//   return formattedResult;
-// };
-
 const updateBookingIntoDB = async (id: string) => {
   try {
     const bookingData = await Booking.findById(id);
@@ -147,9 +131,34 @@ const updateBookingIntoDB = async (id: string) => {
   }
 };
 
+const getBookingIntoDB = async (token: any) => {
+  if (!token) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
+  }
 
+  const decoded = jwt.verify(
+    token,
+    config.jwt_access_secret as string,
+  ) as JwtPayload;
+
+  const { userEmail } = decoded;
+
+  const user = await User.isUserExistsByEmail(userEmail);
+  const { _id: userId } = user as any;
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
+  console.log(userEmail);
+
+  const allBookingData = await Booking.find({ userId: userId });
+  console.log(allBookingData);
+
+  return allBookingData;
+};
 
 export const BookingServices = {
   createBookingIntoDB,
   updateBookingIntoDB,
+  getBookingIntoDB,
 };

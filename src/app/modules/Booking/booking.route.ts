@@ -20,8 +20,6 @@ router.put(
   BookingControllers.updateBooking,
 );
 
-// router.get('/', BikeControllers.getAllBike);
-
-// router.delete('/:id', auth(USER_ROLE.admin), BikeControllers.deleteBike);
+router.get('/', auth(USER_ROLE.user), BookingControllers.getBooking);
 
 export const BookingRoutes = router;
