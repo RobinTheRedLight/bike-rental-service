@@ -26,7 +26,7 @@ const sendResponse = <T>(
       data: data.data,
     });
   } else {
-    res.status(404).json({
+    res.status(204).json({
       success: false,
       message: 'No Data Found',
       data: [],
