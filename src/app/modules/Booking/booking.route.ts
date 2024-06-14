@@ -14,14 +14,13 @@ router.post(
   BookingControllers.createBooking,
 );
 
-// router.get('/', BikeControllers.getAllBike);
+router.put(
+  '/:id/return',
+  auth(USER_ROLE.admin),
+  BookingControllers.updateBooking,
+);
 
-// router.put(
-//   '/:id',
-//   auth(USER_ROLE.admin),
-//   validateRequest(BikeValidation.updateBikeValidationSchema),
-//   BikeControllers.updateBike,
-// );
+// router.get('/', BikeControllers.getAllBike);
 
 // router.delete('/:id', auth(USER_ROLE.admin), BikeControllers.deleteBike);
 

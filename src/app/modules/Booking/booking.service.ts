@@ -90,69 +90,66 @@ const createBookingIntoDB = async (payload: any) => {
 //   return formattedResult;
 // };
 
-// const updateBikeIntoDB = async (id: string, payload: Partial<TBike>) => {
-//   const result: any = await Bike.findByIdAndUpdate(id, payload, {
-//     new: true,
-//   });
-//   const formattedResult = {
-//     _id: result._id,
-//     name: result.name,
-//     description: result.description,
-//     pricePerHour: result.pricePerHour,
-//     isAvailable: result.isAvailable,
-//     cc: result.cc,
-//     year: result.year,
-//     model: result.model,
-//     brand: result.brand,
-//   };
+const updateBookingIntoDB = async (id: string) => {
+  try {
+    const bookingData = await Booking.findById(id);
+    if (!bookingData) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Booking not found');
+    }
 
-//   return formattedResult;
-// };
+    const { startTime, bikeId } = bookingData;
 
-// const deleteBikeFromDB = async (id: string) => {
-//   const session = await Bike.startSession();
-//   session.startTransaction();
+    const updateBikeResult = await Bike.findByIdAndUpdate(
+      bikeId,
+      { isAvailable: true },
+      { new: true },
+    );
+    if (!updateBikeResult) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Bike not found');
+    }
 
-//   try {
-//     const updateResult = await Bike.findByIdAndUpdate(
-//       id,
-//       { isAvailable: false },
-//       { new: true, session },
-//     );
+    const bikeData = await Bike.findById(bikeId);
+    if (!bikeData) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Bike not found');
+    }
 
-//     if (!updateResult) {
-//       throw new Error('Bike not found');
-//     }
+    const { pricePerHour } = bikeData;
 
-//     const deleteResult = await Bike.findByIdAndDelete(id, { session });
+    const startDate = new Date(startTime);
+    const currentDate = new Date();
+    const durationMs = currentDate.getTime() - startDate.getTime();
+    const durationHours = durationMs / (1000 * 60 * 60);
+    const rentalHours = Math.ceil(durationHours);
 
-//     if (!deleteResult) {
-//       throw new Error('Bike not found or already deleted');
-//     }
+    const totalCost = rentalHours * pricePerHour;
 
-//     await session.commitTransaction();
-//     session.endSession();
+    const updatedData = {
+      returnTime: currentDate,
+      totalCost: totalCost,
+      isReturned: true,
+    };
+    const updateBookingResult = await Booking.findByIdAndUpdate(
+      id,
+      updatedData,
+      { new: true },
+    );
 
-//     const formattedResult = {
-//       _id: updateResult._id,
-//       name: updateResult.name,
-//       description: updateResult.description,
-//       pricePerHour: updateResult.pricePerHour,
-//       isAvailable: updateResult.isAvailable,
-//       cc: updateResult.cc,
-//       year: updateResult.year,
-//       model: updateResult.model,
-//       brand: updateResult.brand,
-//     };
+    if (!updateBookingResult) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Booking not found');
+    }
 
-//     return formattedResult;
-//   } catch (error) {
-//     await session.abortTransaction();
-//     session.endSession();
-//     throw error;
-//   }
-// };
+    const { _doc } = updateBookingResult as any;
+    const { createdAt, updatedAt, __v, ...data } = _doc;
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 
 export const BookingServices = {
   createBookingIntoDB,
+  updateBookingIntoDB,
 };

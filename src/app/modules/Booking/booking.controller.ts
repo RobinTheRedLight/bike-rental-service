@@ -10,9 +10,6 @@ const createBooking = catchAsync(async (req, res) => {
     bookingData,
     token,
   });
-  // const { _doc } = result as any;
-  // const { createdAt, updatedAt, __v, ...data } = _doc;
-
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -21,6 +18,18 @@ const createBooking = catchAsync(async (req, res) => {
   });
 });
 
+const updateBooking = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await BookingServices.updateBookingIntoDB(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Bike returned successfully',
+    data: result,
+  });
+});
+
 export const BookingControllers = {
   createBooking,
+  updateBooking,
 };
