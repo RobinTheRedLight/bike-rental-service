@@ -154,7 +154,17 @@ const getBookingIntoDB = async (token: any) => {
   const allBookingData = await Booking.find({ userId: userId });
   console.log(allBookingData);
 
-  return allBookingData;
+  const formattedResult = allBookingData.map((booking) => ({
+    _id: booking._id,
+    userId: booking.userId,
+    bikeId: booking.bikeId,
+    startTime: booking.startTime,
+    returnTime: booking.returnTime,
+    totalCost: booking.totalCost,
+    isReturned: booking.isReturned,
+  }));
+
+  return formattedResult;
 };
 
 export const BookingServices = {
