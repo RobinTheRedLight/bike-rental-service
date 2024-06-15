@@ -2,12 +2,10 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
-import { userValidationSchema } from './user.validation';
 
 const createUser = catchAsync(async (req, res) => {
   const userData = req.body;
-  const zodParsedData = userValidationSchema.parse(userData);
-  const result = await UserServices.createUserIntoDB(zodParsedData);
+  const result = await UserServices.createUserIntoDB(userData);
   const { _doc } = result as any;
   const { password, ...userWithoutPassword } = _doc;
 
