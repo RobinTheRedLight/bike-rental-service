@@ -9,11 +9,13 @@ import catchAsync from '../utils/catchAsync';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
-
+    let token: any = req.headers.authorization;
     if (!token) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
     }
+    const splitToken = token.split(' ');
+    console.log(splitToken[1]);
+    token = splitToken[1];
 
     const decoded = jwt.verify(
       token,

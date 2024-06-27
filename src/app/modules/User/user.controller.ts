@@ -18,7 +18,9 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getUser = catchAsync(async (req, res) => {
-  const token = req.headers.authorization;
+  let token: any = req.headers.authorization;
+  const splitToken = token.split(' ');
+  token = splitToken[1];
   const result = await UserServices.getUserFromDB(token);
   const { _doc } = result as any;
   const { password, ...userWithoutPassword } = _doc;
@@ -32,7 +34,9 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  const token = req.headers.authorization;
+  let token:any = req.headers.authorization;
+  const splitToken = token.split(' ');
+  token = splitToken[1];
   const updateData = req.body;
   const result = await UserServices.updateUserFromDB({ updateData, token });
   const { _doc } = result as any;

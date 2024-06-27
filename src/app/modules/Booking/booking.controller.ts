@@ -5,7 +5,10 @@ import { BookingServices } from './booking.service';
 
 const createBooking = catchAsync(async (req, res) => {
   const bookingData = req.body;
-  const token = req.headers.authorization;
+  let token: any = req.headers.authorization;
+  const splitToken = token.split(' ');
+  token = splitToken[1];
+
   const result = await BookingServices.createBookingIntoDB({
     bookingData,
     token,
@@ -30,7 +33,9 @@ const updateBooking = catchAsync(async (req, res) => {
 });
 
 const getBooking = catchAsync(async (req, res) => {
-  const token = req.headers.authorization;
+  let token: any = req.headers.authorization;
+  const splitToken = token.split(' ');
+  token = splitToken[1];
   const result = await BookingServices.getBookingIntoDB(token);
   sendResponse(res, {
     success: true,
