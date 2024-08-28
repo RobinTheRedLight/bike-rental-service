@@ -12,6 +12,12 @@ const createUserIntoDB = async (payload: TUser) => {
   return newUser;
 };
 
+
+const getAllUsersFromDB = async () => {
+  const users = await User.find().select('-password');
+  return users;
+};
+
 const getUserFromDB = async (payload: any) => {
   const token = payload;
   if (!token) {
@@ -62,4 +68,5 @@ export const UserServices = {
   createUserIntoDB,
   getUserFromDB,
   updateUserFromDB,
+  getAllUsersFromDB,
 };

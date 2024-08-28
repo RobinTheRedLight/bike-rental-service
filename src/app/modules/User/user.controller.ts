@@ -17,6 +17,17 @@ const createUser = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const users = await UserServices.getAllUsersFromDB();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All users retrieved successfully',
+    data: users,
+  });
+});
+
 const getUser = catchAsync(async (req, res) => {
   let token: any = req.headers.authorization;
   const splitToken = token.split(' ');
@@ -34,7 +45,7 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  let token:any = req.headers.authorization;
+  let token: any = req.headers.authorization;
   const splitToken = token.split(' ');
   token = splitToken[1];
   const updateData = req.body;
@@ -54,4 +65,5 @@ export const UserControllers = {
   createUser,
   getUser,
   updateUser,
+  getAllUsers,
 };

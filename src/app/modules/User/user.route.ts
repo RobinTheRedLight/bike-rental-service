@@ -12,6 +12,13 @@ router.get(
   auth(USER_ROLE.admin, USER_ROLE.user),
   UserControllers.getUser,
 );
+
+router.get(
+  '/allUsers',
+  auth(USER_ROLE.admin),
+  UserControllers.getAllUsers,
+);
+
 router.put(
   '/me',
   auth(USER_ROLE.admin, USER_ROLE.user),
