@@ -7,4 +7,5 @@ export interface TBooking {
   returnTime: Date | null;
   totalCost: number;
   isReturned: boolean;
+  isPaid: boolean;
 }

@@ -5,6 +5,7 @@ const couponCreationValidationSchema = z.object({
     code: z.string(),
     discount: z.number().min(0).max(100),
     expiryDate: z.date(),
+    description: z.string(),
   }),
   cookies: z.object({}),
 });

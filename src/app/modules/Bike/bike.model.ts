@@ -30,9 +30,12 @@ const bikeSchema = new Schema<TBike, BikeModel>(
     model: {
       type: String,
       required: true,
-      unique: true,
     },
     brand: {
+      type: String,
+      required: true,
+    },
+    img: {
       type: String,
       required: true,
     },

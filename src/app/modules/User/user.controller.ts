@@ -44,6 +44,17 @@ const getUser = catchAsync(async (req, res) => {
   });
 });
 
+const deleteUser = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.deleteUserFromDB(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User deleted successfully',
+    data: result,
+  });
+});
+
 const updateUser = catchAsync(async (req, res) => {
   let token: any = req.headers.authorization;
   const splitToken = token.split(' ');
@@ -61,9 +72,26 @@ const updateUser = catchAsync(async (req, res) => {
   });
 });
 
+const updateUserAdmin = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+  const result = await UserServices.updateUserAdminFromDB({ updateData, id });
+  const { _doc } = result as any;
+  const { password, createdAt, updatedAt, __v, ...userWithoutPassword } = _doc;
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User updated successfully',
+    data: userWithoutPassword,
+  });
+});
+
 export const UserControllers = {
   createUser,
   getUser,
   updateUser,
   getAllUsers,
+  deleteUser,
+  updateUserAdmin
 };

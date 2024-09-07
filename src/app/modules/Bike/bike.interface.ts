@@ -9,6 +9,7 @@ export interface TBike {
   year: number;
   model: string;
   brand: string;
+  img: string;
 }
 
 export interface BikeModel extends Model<TBike> {

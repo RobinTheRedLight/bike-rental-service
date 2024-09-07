@@ -7,6 +7,8 @@ import config from '../../config';
 import { User } from '../user/user.model';
 import { Bike } from '../bike/bike.model';
 
+const stripe = require('stripe')(process.env.PAYMENT_SECRET_KEY);
+
 const createBookingIntoDB = async (payload: any) => {
   const { bookingData, token } = payload;
   const { bikeId, startTime } = bookingData;
@@ -51,6 +53,7 @@ const createBookingIntoDB = async (payload: any) => {
       returnTime: null,
       totalCost: 0,
       isReturned: false,
+      isPaid: false,
     };
 
     const result = await Booking.create(bookingCreation);
@@ -62,6 +65,7 @@ const createBookingIntoDB = async (payload: any) => {
       returnTime: result.returnTime,
       totalCost: result.totalCost,
       isReturned: result.isReturned,
+      isPaid: result.isPaid,
     };
 
     await session.commitTransaction();
@@ -74,6 +78,19 @@ const createBookingIntoDB = async (payload: any) => {
     throw error;
   }
 };
+
+const createPaymentIntoStripe = async (payload: any) => {
+  const { amount } = payload;
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amount,
+    currency: 'usd',
+    payment_method_types: ['card'],
+  });
+
+  return paymentIntent;
+};
+
 const updateBookingIntoDB = async (id: string) => {
   try {
     const bookingData = await Booking.findById(id);
@@ -130,8 +147,35 @@ const updateBookingIntoDB = async (id: string) => {
     throw error;
   }
 };
+const updateBookingPayIntoDB = async (id: string) => {
+  try {
+    const bookingData = await Booking.findById(id);
+    if (!bookingData) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Booking not found');
+    }
+    const updatedData = {
+      isPaid: true,
+    };
+    const updateBookingResult = await Booking.findByIdAndUpdate(
+      id,
+      updatedData,
+      { new: true },
+    );
 
-const getBookingIntoDB = async (token: any) => {
+    if (!updateBookingResult) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Booking not found');
+    }
+
+    const { _doc } = updateBookingResult as any;
+    const { createdAt, updatedAt, __v, ...data } = _doc;
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getBookingFromDB = async (token: any) => {
   if (!token) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
   }
@@ -149,10 +193,8 @@ const getBookingIntoDB = async (token: any) => {
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
   }
-  console.log(userEmail);
 
   const allBookingData = await Booking.find({ userId: userId });
-  console.log(allBookingData);
 
   const formattedResult = allBookingData.map((booking) => ({
     _id: booking._id,
@@ -162,13 +204,22 @@ const getBookingIntoDB = async (token: any) => {
     returnTime: booking.returnTime,
     totalCost: booking.totalCost,
     isReturned: booking.isReturned,
+    isPaid: booking.isPaid,
   }));
 
   return formattedResult;
 };
 
+const getAllBookingsFromDB = async () => {
+  const allBookingData = await Booking.find();
+  return allBookingData;
+};
+
 export const BookingServices = {
   createBookingIntoDB,
   updateBookingIntoDB,
-  getBookingIntoDB,
+  getBookingFromDB,
+  createPaymentIntoStripe,
+  updateBookingPayIntoDB,
+  getAllBookingsFromDB,
 };

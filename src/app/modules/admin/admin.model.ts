@@ -15,6 +15,10 @@ const couponSchema = new Schema<TCoupon, CouponModel>({
     type: Date,
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
 });
 
 couponSchema.statics.isCouponValid = async function (code: string) {

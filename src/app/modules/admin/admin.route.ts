@@ -5,22 +5,14 @@ import { USER_ROLE } from '../user/user.constant';
 
 const router = express.Router();
 
+router.post('/coupon', auth(USER_ROLE.admin), AdminControllers.createCoupon);
+
+router.get('/coupon', AdminControllers.getAllCoupons);
+
 router.delete(
-  '/user/:id',
+  '/coupon/:id',
   auth(USER_ROLE.admin),
-  AdminControllers.deleteUser,
-);
-
-router.put(
-  '/user/:id/promote',
-  auth(USER_ROLE.admin),
-  AdminControllers.promoteUserToAdmin,
-);
-
-router.post(
-  '/coupon',
-  auth(USER_ROLE.admin),
-  AdminControllers.createCoupon,
+  AdminControllers.deleteCoupon,
 );
 
 export const AdminRoutes = router;

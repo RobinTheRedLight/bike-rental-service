@@ -14,7 +14,6 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
     }
     const splitToken = token.split(' ');
-    console.log(splitToken[1]);
     token = splitToken[1];
 
     const decoded = jwt.verify(

@@ -11,6 +11,7 @@ export const createBikeValidationSchema = z.object({
     year: z.number().int(),
     model: z.string(),
     brand: z.string(),
+    img: z.string(),
   }),
   cookies: z.object({}),
 });

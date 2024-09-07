@@ -13,6 +13,7 @@ router.post(
   validateRequest(bookBikeValidation.bookBikeValidationSchema),
   BookingControllers.createBooking,
 );
+router.post('/create-payment-intent', BookingControllers.createPayment);
 
 router.put(
   '/:id/return',
@@ -20,6 +21,14 @@ router.put(
   BookingControllers.updateBooking,
 );
 
+router.put(
+  '/pay/:id',
+  auth(USER_ROLE.user),
+  BookingControllers.updateBookingPay,
+);
+
 router.get('/', auth(USER_ROLE.user), BookingControllers.getBooking);
+
+router.get('/all', auth(USER_ROLE.admin), BookingControllers.getAllBookings);
 
 export const BookingRoutes = router;

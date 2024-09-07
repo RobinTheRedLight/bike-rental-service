@@ -13,11 +13,7 @@ router.get(
   UserControllers.getUser,
 );
 
-router.get(
-  '/allUsers',
-  auth(USER_ROLE.admin),
-  UserControllers.getAllUsers,
-);
+router.get('/allUsers', auth(USER_ROLE.admin), UserControllers.getAllUsers);
 
 router.put(
   '/me',
@@ -25,5 +21,13 @@ router.put(
   validateRequest(UserValidation.userUpdateValidationSchema),
   UserControllers.updateUser,
 );
+
+router.put(
+  '/makeAdmin/:id',
+  auth(USER_ROLE.admin),
+  UserControllers.updateUserAdmin,
+);
+
+router.delete('/:id', auth(USER_ROLE.admin), UserControllers.deleteUser);
 
 export const UserRoutes = router;

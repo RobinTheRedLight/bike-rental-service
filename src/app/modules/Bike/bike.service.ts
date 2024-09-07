@@ -17,6 +17,7 @@ const getBikesFromDB = async () => {
     year: bike.year,
     model: bike.model,
     brand: bike.brand,
+    img: bike.img,
   }));
   return formattedResult;
 };
@@ -35,6 +36,7 @@ const updateBikeIntoDB = async (id: string, payload: Partial<TBike>) => {
     year: result.year,
     model: result.model,
     brand: result.brand,
+    img: result.img,
   };
 
   return formattedResult;
@@ -74,6 +76,7 @@ const deleteBikeFromDB = async (id: string) => {
       year: updateResult.year,
       model: updateResult.model,
       brand: updateResult.brand,
+      img: updateResult.img,
     };
 
     return formattedResult;

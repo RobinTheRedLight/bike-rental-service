@@ -12,12 +12,7 @@ const sendResponse = <T>(
   res: Response,
   data: TResponse<T> | null | undefined,
 ) => {
-  if (
-    data &&
-    data.data !== null &&
-    data.data !== undefined &&
-    (Array.isArray(data.data) ? data.data.length > 0 : true)
-  ) {
+  if (data) {
     res.status(data.statusCode).json({
       success: data.success,
       statusCode: data.statusCode,
