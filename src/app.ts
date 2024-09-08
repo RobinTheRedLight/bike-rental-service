@@ -16,7 +16,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://ride-roll-powy.vercel.app'],
+    origin: [
+      'http://localhost:5173',
+      'https://assignment-5-eosin.vercel.app',
+      'https://rideandroll.netlify.app',
+    ],
     credentials: true,
   }),
 );
