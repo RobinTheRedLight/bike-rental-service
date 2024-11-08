@@ -10,6 +10,7 @@ export interface TBike {
   model: string;
   brand: string;
   img: string;
+  rating?: number;
 }
 
 export interface BikeModel extends Model<TBike> {

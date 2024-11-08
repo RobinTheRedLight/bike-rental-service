@@ -25,6 +25,7 @@ export const updateBikeValidationSchema = z.object({
     year: z.number().int().optional(),
     model: z.string().optional(),
     brand: z.string().optional(),
+    rating: z.number().optional(),
   }),
   cookies: z.object({}),
 });

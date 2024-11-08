@@ -18,28 +18,40 @@ const getBikesFromDB = async () => {
     model: bike.model,
     brand: bike.brand,
     img: bike.img,
+    rating: bike.rating,
   }));
   return formattedResult;
 };
 
 const updateBikeIntoDB = async (id: string, payload: Partial<TBike>) => {
-  const result: any = await Bike.findByIdAndUpdate(id, payload, {
-    new: true,
-  });
-  const formattedResult = {
-    _id: result._id,
-    name: result.name,
-    description: result.description,
-    pricePerHour: result.pricePerHour,
-    isAvailable: result.isAvailable,
-    cc: result.cc,
-    year: result.year,
-    model: result.model,
-    brand: result.brand,
-    img: result.img,
-  };
+  try {
+    const result: any = await Bike.findByIdAndUpdate(id, payload, {
+      new: true,
+    });
 
-  return formattedResult;
+    if (!result) {
+      throw new Error('Bike not found or update failed');
+    }
+
+    const formattedResult = {
+      _id: result._id,
+      name: result.name,
+      description: result.description,
+      pricePerHour: result.pricePerHour,
+      isAvailable: result.isAvailable,
+      cc: result.cc,
+      year: result.year,
+      model: result.model,
+      brand: result.brand,
+      img: result.img,
+      rating: result.rating,
+    };
+
+    return formattedResult;
+  } catch (error) {
+    console.error('Error updating bike:', error);
+    throw error;
+  }
 };
 
 const deleteBikeFromDB = async (id: string) => {

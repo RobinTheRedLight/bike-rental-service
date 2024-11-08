@@ -29,6 +29,10 @@ router.put(
 
 router.get('/', auth(USER_ROLE.user), BookingControllers.getBooking);
 
-router.get('/all', auth(USER_ROLE.admin), BookingControllers.getAllBookings);
+router.get(
+  '/all',
+  auth(USER_ROLE.admin, USER_ROLE.user),
+  BookingControllers.getAllBookings,
+);
 
 export const BookingRoutes = router;

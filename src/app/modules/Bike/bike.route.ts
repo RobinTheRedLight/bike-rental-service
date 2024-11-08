@@ -18,7 +18,7 @@ router.get('/', BikeControllers.getAllBike);
 
 router.put(
   '/:id',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.user),
   validateRequest(BikeValidation.updateBikeValidationSchema),
   BikeControllers.updateBike,
 );
